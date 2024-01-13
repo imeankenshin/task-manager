@@ -2,7 +2,7 @@
   "name": "easy-task",
   "type": "module",
   "scripts": {
-    "prepare": "panda codegen",
+    "prepare": "panda codegen && husky install",
     "dev": "vinxi dev",
     "build": "vinxi build",
     "start": "vinxi start"

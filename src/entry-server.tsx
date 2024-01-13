@@ -1,5 +1,6 @@
 import { createHandler } from "@solidjs/start/entry";
 import { StartServer } from "@solidjs/start/server";
+import { css } from "styled-system/css";
 
 export default createHandler(() => (
   <StartServer
@@ -11,7 +12,7 @@ export default createHandler(() => (
           <link rel="icon" href="/favicon.ico" />
           {assets}
         </head>
-        <body>
+        <body class={css({})}>
           <div id="app">{children}</div>
           {scripts}
         </body>

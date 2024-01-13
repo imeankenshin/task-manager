@@ -2,9 +2,28 @@
   "name": "easy-task",
   "type": "module",
   "scripts": {
+    "prepare": "panda codegen",
     "dev": "vinxi dev",
     "build": "vinxi build",
     "start": "vinxi start"
+  },
+  "devDependencies": {
+    "@pandacss/dev": "^0.20.1",
+    "@types/node": "^18.17.5",
+    "@typescript-eslint/eslint-plugin": "^6.13.2",
+    "@typescript-eslint/parser": "^6.13.1",
+    "cypress": "^13.6.1",
+    "eslint": "^8.55.0",
+    "eslint-config-next": "^14.0.4",
+    "eslint-plugin-cypress": "^2.15.1",
+    "eslint-plugin-jsx-a11y": "^6.8.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-solid": "^0.13.0",
+    "eslint-plugin-unicorn": "^49.0.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0",
+    "postcss": "^8.4.28",
+    "prettier": "^3.1.0"
   },
   "dependencies": {
     "@solidjs/start": "^0.4.9",
@@ -13,5 +32,48 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "eslintConfig": {
+    "root": true,
+    "env": {
+      "browser": true,
+      "es2021": true,
+      "node": true
+    },
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "solid",
+      "prettier",
+      "jsx-a11y",
+      "unicorn",
+      "@typescript-eslint"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:solid/recommended",
+      "next/core-web-vitals",
+      "plugin:@typescript-eslint/recommended"
+    ],
+    "rules": {
+      "unicorn/filename-case": [
+        "error",
+        {
+          "case": "kebabCase"
+        }
+      ],
+      "prettier/prettier": "warn"
+    }
+  },
+  "prettier": {
+    "printWidth": 100,
+    "semi": true,
+    "singleQuote": false,
+    "trailingComma": "none"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }

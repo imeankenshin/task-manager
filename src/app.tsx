@@ -4,7 +4,7 @@ import { Flex, VStack, styled } from "styled-system/jsx";
 
 export default function App() {
   return (
-    <VStack maxWidth="4xl" minH="screen" bgColor="warmGray.50">
+    <VStack maxWidth="4xl" minH="screen">
       <Flex pt="16" w="full" px="8" justifyContent="center">
         <styled.input
           flex={8}

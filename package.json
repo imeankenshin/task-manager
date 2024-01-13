@@ -61,6 +61,8 @@
           "case": "kebabCase"
         }
       ],
+      "@next/next/no-img-element": "off",
+      "@next/next/no-head-element": "off",
       "prettier/prettier": "warn"
     }
   },

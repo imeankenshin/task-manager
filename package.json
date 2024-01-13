@@ -73,7 +73,7 @@
     "trailingComma": "none"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx,css}": [
+    "*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
     ]

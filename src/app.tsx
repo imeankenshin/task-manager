@@ -13,21 +13,26 @@ export default function App() {
   // cannot start with a space
   const [todos, setTodos] = createSignal(new Array<Todo>());
   return (
-    <VStack maxWidth="4xl" minH="screen" mx="auto" gap="8">
+    <VStack maxWidth="4xl" minH="screen" py="16" mx="auto" gap="8">
       <styled.form
         display="flex"
-        pt="16"
         w="full"
         px="8"
         justifyContent="center"
         onSubmit={(e) => {
-          e.preventDefault();
+          const input = e.currentTarget.querySelector("input");
           const formData = new FormData(e.currentTarget);
-          setTodos([...todos(), { text: formData.get("text") as string, completed: false }]);
+          const text = (formData.get("text") || "").toString().trim();
+          e.preventDefault();
+          if (!text || !input) return;
+          setTodos([...todos(), { text, completed: false }]);
+          input.value = "";
         }}
       >
         <input
           name="text"
+          id="text"
+          autocomplete="off"
           placeholder="What do you need to do?"
           class={css({
             bgColor: "warmGray.200",

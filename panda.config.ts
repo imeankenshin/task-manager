@@ -54,6 +54,11 @@ export default defineConfig({
       }
     }
   },
+  conditions: {
+    extend: {
+      ariaChecked: "&[aria-checked=true]"
+    }
+  },
   jsxFramework: "solid",
 
   // The output directory for your css system

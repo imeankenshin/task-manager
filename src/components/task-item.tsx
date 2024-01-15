@@ -10,26 +10,25 @@ type TaskItemProps = {
 export default function TaskItem(props: TaskItemProps) {
   return (
     <Flex
-      px="8"
-      h="12"
       w="full"
       gap="3"
-      justifyContent="flex-start"
-      alignItems="center"
       borderBottomWidth="1"
       borderBottomColor="warmGray.200"
+      aria-labelledby=""
     >
       <Checkbox defaultChecked={props.completed} />
-      <span
-        class={css({
-          color: "warmGray.700",
-          fontSize: "xl",
-          fontWeight: "medium",
-          textDecoration: props.completed ? "line-through" : "none"
-        })}
-      >
-        {props.title}
-      </span>
+      <Flex direction="column" gap="1" w="full">
+        <div
+          class={css({
+            color: "warmGray.700",
+            fontSize: "xl",
+            fontWeight: "bold",
+            textDecoration: props.completed ? "line-through" : "none"
+          })}
+        >
+          {props.title}
+        </div>
+      </Flex>
     </Flex>
   );
 }

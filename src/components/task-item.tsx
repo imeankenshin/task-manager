@@ -12,6 +12,7 @@ type TaskItemProps = {
 
 export default function TaskItem(props: TaskItemProps) {
   const titleId = () => `task-title-${props.id}`;
+  const checkboxId = () => `task-checkbox-${props.id}`;
   return (
     <Flex
       role="group"
@@ -21,7 +22,7 @@ export default function TaskItem(props: TaskItemProps) {
       borderBottomColor="warmGray.200"
       aria-labelledby={titleId()}
     >
-      <Checkbox defaultChecked={props.completed} />
+      <Checkbox id={checkboxId()} defaultChecked={props.completed} />
       <Flex direction="column" gap="1" w="full">
         <div
           id={titleId()}

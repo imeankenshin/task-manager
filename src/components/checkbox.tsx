@@ -3,12 +3,14 @@ import { createSignal } from "solid-js";
 import { styled } from "styled-system/jsx";
 
 type CheckboxProps = {
+  id?: string;
   defaultChecked?: boolean;
 };
 export default function Checkbox(props: CheckboxProps) {
   const [checked, setChecked] = createSignal(props.defaultChecked ?? false);
   return (
-    <styled.span
+    <styled.label
+      for={props.id}
       class={square({
         display: "inline-grid",
         placeItems: "center",
@@ -18,6 +20,7 @@ export default function Checkbox(props: CheckboxProps) {
       })}
     >
       <button
+        id={props.id}
         role="checkbox"
         aria-checked={checked()}
         onClick={() => setChecked(!checked())}
@@ -46,6 +49,6 @@ export default function Checkbox(props: CheckboxProps) {
           ✓
         </styled.span>
       </button>
-    </styled.span>
+    </styled.label>
   );
 }

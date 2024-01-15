@@ -53,22 +53,20 @@ export default function App() {
           })}
         />
       </styled.form>
-      <ul
-        class={css({
-          listStyleType: "none",
-          m: "0",
-          p: "0",
-          w: "full"
-        })}
-      >
+      <VStack listStyleType="none" m="0" p="0" w="full" gap="6">
         <For each={todos()}>
-          {(todo) => (
-            <li>
-              <TaskItem completed={todo.completed} title={todo.text} />
-            </li>
+          {(todo, index) => (
+            <styled.li w="full">
+              <TaskItem
+                id={index().toString()}
+                completed={todo.completed}
+                title={todo.text}
+                description="test"
+              />
+            </styled.li>
           )}
         </For>
-      </ul>
+      </VStack>
     </VStack>
   );
 }

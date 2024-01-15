@@ -58,6 +58,11 @@ export default function App() {
           {(todo, index) => (
             <styled.li w="full">
               <TaskItem
+                onDeleted={() => {
+                  const newTodos = [...todos()];
+                  newTodos.splice(index(), 1);
+                  setTodos(newTodos);
+                }}
                 id={index().toString()}
                 completed={todo.completed}
                 title={todo.text}

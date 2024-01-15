@@ -1,9 +1,9 @@
 // @refresh reload
 import "./app.css";
-import { Flex, VStack, styled } from "styled-system/jsx";
+import { VStack, styled } from "styled-system/jsx";
 import { css } from "styled-system/css";
-import Checkbox from "~/components/checkbox";
 import { createSignal, For } from "solid-js";
+import TaskItem from "~/components/task-item";
 
 type Todo = {
   text: string;
@@ -64,28 +64,7 @@ export default function App() {
         <For each={todos()}>
           {(todo) => (
             <li>
-              <Flex
-                px="8"
-                h="12"
-                w="full"
-                gap="3"
-                justifyContent="flex-start"
-                alignItems="center"
-                borderBottomWidth="1"
-                borderBottomColor="warmGray.200"
-              >
-                <Checkbox defaultChecked={todo.completed} />
-                <span
-                  class={css({
-                    color: "warmGray.700",
-                    fontSize: "xl",
-                    fontWeight: "medium",
-                    textDecoration: todo.completed ? "line-through" : "none"
-                  })}
-                >
-                  {todo.text}
-                </span>
-              </Flex>
+              <TaskItem completed={todo.completed} title={todo.text} />
             </li>
           )}
         </For>

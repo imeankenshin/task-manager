@@ -13,6 +13,7 @@ type TaskItemProps = {
 
 export default function TaskItem(props: TaskItemProps) {
   const titleId = () => `task-title-${props.id}`;
+  const descriptionId = () => `task-description-${props.id}`;
   const checkboxId = () => `task-checkbox-${props.id}`;
   return (
     <Flex
@@ -28,6 +29,7 @@ export default function TaskItem(props: TaskItemProps) {
       borderBottomWidth="1"
       borderBottomColor="warmGray.200"
       aria-labelledby={titleId()}
+      aria-describedby={descriptionId()}
     >
       <Checkbox id={checkboxId()} defaultChecked={props.completed} />
       <Flex direction="column" gap="1" w="full">
@@ -72,6 +74,7 @@ export default function TaskItem(props: TaskItemProps) {
         </HStack>
         <Show when={props.description}>
           <div
+            id={descriptionId()}
             class={css({
               color: "warmGray.700",
               fontSize: "lg",

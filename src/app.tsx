@@ -53,7 +53,16 @@ export default function App() {
           })}
         />
       </styled.form>
-      <VStack listStyleType="none" m="0" p="0" w="full" gap="6">
+      <styled.ul
+        display="flex"
+        flexDirection="column"
+        px="6"
+        listStyleType="none"
+        m="0"
+        p="0"
+        w="full"
+        gap="6"
+      >
         <For each={todos()}>
           {(todo, index) => (
             <styled.li w="full">
@@ -71,7 +80,7 @@ export default function App() {
             </styled.li>
           )}
         </For>
-      </VStack>
+      </styled.ul>
     </VStack>
   );
 }

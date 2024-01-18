@@ -1,27 +1,34 @@
 import { Flex, HStack } from "styled-system/jsx";
 import Checkbox from "~/components/checkbox";
 import { css } from "styled-system/css";
-import { Show } from "solid-js";
+import { JSX, Show } from "solid-js";
 
 type TaskItemProps = {
   id: string;
   title: string;
   description?: string;
   completed: boolean;
-  onDeleted?: () => void;
+  onDelete?: JSX.EventHandler<HTMLDivElement, Event>;
 };
 
 export default function TaskItem(props: TaskItemProps) {
-  const titleId = () => `task-title-${props.id}`;
-  const descriptionId = () => `task-description-${props.id}`;
-  const checkboxId = () => `task-checkbox-${props.id}`;
+  const titleId = () => `task-title-${props.id}`,
+    descriptionId = () => `task-description-${props.id}`,
+    checkboxId = () => `task-checkbox-${props.id}`,
+    handleKeyDown: JSX.EventHandler<HTMLDivElement, KeyboardEvent> = (e) => {
+      switch (e.key) {
+        case "Backspace":
+          e.preventDefault();
+          if (props.onDelete) {
+            props.onDelete(e);
+          }
+          break;
+      }
+    };
+
   return (
     <Flex
-      onKeyDown={(e) => {
-        if (e.key === "Backspace" && props.onDeleted) {
-          props.onDeleted();
-        }
-      }}
+      onKeyDown={handleKeyDown}
       class="group"
       role="group"
       w="full"

@@ -67,10 +67,18 @@ export default function App() {
           {(todo, index) => (
             <styled.li w="full">
               <TaskItem
-                onDeleted={() => {
+                onDelete={(e) => {
+                  const currentEl = e.currentTarget.parentElement;
+                  const prevEl = currentEl?.previousElementSibling;
+                  const nextEl = currentEl?.nextElementSibling;
                   const newTodos = [...todos()];
                   newTodos.splice(index(), 1);
                   setTodos(newTodos);
+                  if (nextEl) {
+                    nextEl.querySelector("button")?.focus();
+                  } else if (prevEl) {
+                    prevEl.querySelector("button")?.focus();
+                  }
                 }}
                 id={index().toString()}
                 completed={todo.completed}

@@ -1,13 +1,30 @@
 import { square } from "styled-system/patterns";
-import { createSignal } from "solid-js";
+import { createEffect, createSignal, JSX, on, Setter } from "solid-js";
 import { styled } from "styled-system/jsx";
+import { css } from "styled-system/css";
 
-type CheckboxProps = {
-  id?: string;
+type AdditionalCheckboxProps = {
+  checked?: boolean;
+  setChecked?: Setter<boolean>;
   defaultChecked?: boolean;
+  onCheckedChange?: (checked: boolean) => void;
 };
+
+type CheckboxProps = Omit<
+  JSX.ButtonHTMLAttributes<HTMLButtonElement>,
+  keyof AdditionalCheckboxProps
+> &
+  AdditionalCheckboxProps;
 export default function Checkbox(props: CheckboxProps) {
-  const [checked, setChecked] = createSignal(props.defaultChecked ?? false);
+  const [checked, setChecked] = createSignal(props.defaultChecked || false);
+  createEffect(
+    on(checked, (value) => {
+      console.log("checked", value);
+      if (props.onCheckedChange) {
+        props.onCheckedChange(value);
+      }
+    })
+  );
   return (
     <styled.label
       for={props.id}
@@ -20,10 +37,14 @@ export default function Checkbox(props: CheckboxProps) {
       })}
     >
       <button
+        {...props}
         id={props.id}
         role="checkbox"
+        type="button"
+        onClick={() => {
+          setChecked(!checked());
+        }}
         aria-checked={checked()}
-        onClick={() => setChecked(!checked())}
         class={square({
           border: "none",
           borderRadius: "lg",
@@ -38,16 +59,23 @@ export default function Checkbox(props: CheckboxProps) {
           size: "6",
           _ariaChecked: {
             bgColor: "warmGray.800",
-            color: "warmGray.300",
-            ["& > span"]: {
-              display: "block"
-            }
+            color: "warmGray.300"
           }
         })}
       >
-        <styled.span display="none" position="absolute">
+        <span
+          class={css({
+            visibility: "hidden",
+            color: "warmGray.300",
+            position: "absolute",
+            userSelect: "none",
+            ["button[aria-checked=true] > &"]: {
+              visibility: "visible"
+            }
+          })}
+        >
           ✓
-        </styled.span>
+        </span>
       </button>
     </styled.label>
   );

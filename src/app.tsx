@@ -10,7 +10,6 @@ type Todo = {
   completed: boolean;
 };
 export default function App() {
-  // cannot start with a space
   const [todos, setTodos] = createSignal(new Array<Todo>());
   return (
     <VStack maxWidth="4xl" minH="screen" py="16" mx="auto" gap="8">
@@ -67,6 +66,11 @@ export default function App() {
           {(todo, index) => (
             <styled.li w="full">
               <TaskItem
+                onChange={(checked) => {
+                  const newTodos = [...todos()];
+                  newTodos[index()].completed = checked;
+                  setTodos(newTodos);
+                }}
                 onDelete={(e) => {
                   const currentEl = e.currentTarget.parentElement;
                   const prevEl = currentEl?.previousElementSibling;

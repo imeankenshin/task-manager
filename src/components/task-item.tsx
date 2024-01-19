@@ -9,6 +9,7 @@ type TaskItemProps = {
   description?: string;
   completed: boolean;
   onDelete?: JSX.EventHandler<HTMLDivElement, Event>;
+  onChange?: (checked: boolean) => void;
 };
 
 export default function TaskItem(props: TaskItemProps) {
@@ -38,17 +39,28 @@ export default function TaskItem(props: TaskItemProps) {
       aria-labelledby={titleId()}
       aria-describedby={descriptionId()}
     >
-      <Checkbox id={checkboxId()} defaultChecked={props.completed} />
+      <Checkbox
+        id={checkboxId()}
+        defaultChecked={props.completed}
+        onCheckedChange={(checked) => {
+          if (props.onChange) {
+            props.onChange(checked);
+          }
+        }}
+      />
       <Flex direction="column" gap="1" w="full">
         <HStack>
           <span
+            data-completed={props.completed}
             id={titleId()}
             class={css({
               width: "full",
               color: "warmGray.700",
               fontSize: "xl",
               fontWeight: "bold",
-              textDecoration: props.completed ? "line-through" : "none"
+              '&[data-completed="true"]': {
+                textDecoration: "line-through"
+              }
             })}
           >
             {props.title}
@@ -81,11 +93,14 @@ export default function TaskItem(props: TaskItemProps) {
         </HStack>
         <Show when={props.description}>
           <div
+            data-completed={props.completed}
             id={descriptionId()}
             class={css({
               color: "warmGray.700",
               fontSize: "lg",
-              textDecoration: props.completed ? "line-through" : "none"
+              '&[data-completed="true"]': {
+                textDecoration: "line-through"
+              }
             })}
           >
             {props.description}

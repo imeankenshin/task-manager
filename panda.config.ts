@@ -56,7 +56,8 @@ export default defineConfig({
   },
   conditions: {
     extend: {
-      ariaChecked: "&[aria-checked=true]"
+      ariaChecked: "&[aria-checked=true]",
+      groupHasChecked: ".group:has( *[aria-checked=true], *:checked) &"
     }
   },
   jsxFramework: "solid",

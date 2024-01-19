@@ -29,6 +29,7 @@ export default function TaskItem(props: TaskItemProps) {
 
   return (
     <Flex
+      id={props.id}
       onKeyDown={handleKeyDown}
       class="group"
       role="group"
@@ -51,14 +52,13 @@ export default function TaskItem(props: TaskItemProps) {
       <Flex direction="column" gap="1" w="full">
         <HStack>
           <span
-            data-completed={props.completed}
             id={titleId()}
             class={css({
               width: "full",
               color: "warmGray.700",
               fontSize: "xl",
               fontWeight: "bold",
-              '&[data-completed="true"]': {
+              _groupHasChecked: {
                 textDecoration: "line-through"
               }
             })}
@@ -97,10 +97,7 @@ export default function TaskItem(props: TaskItemProps) {
             id={descriptionId()}
             class={css({
               color: "warmGray.700",
-              fontSize: "lg",
-              '&[data-completed="true"]': {
-                textDecoration: "line-through"
-              }
+              fontSize: "lg"
             })}
           >
             {props.description}

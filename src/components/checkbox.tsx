@@ -1,5 +1,5 @@
 import { square } from "styled-system/patterns";
-import { createEffect, createSignal, JSX, on, Setter } from "solid-js";
+import { createEffect, createSignal, JSX, on, Setter, splitProps } from "solid-js";
 import { styled } from "styled-system/jsx";
 import { css } from "styled-system/css";
 
@@ -16,18 +16,24 @@ type CheckboxProps = Omit<
 > &
   AdditionalCheckboxProps;
 export default function Checkbox(props: CheckboxProps) {
-  const [checked, setChecked] = createSignal(props.defaultChecked || false);
+  const [additional, rest] = splitProps(props, [
+    "checked",
+    "setChecked",
+    "defaultChecked",
+    "onCheckedChange"
+  ] as (keyof AdditionalCheckboxProps)[]);
+  const [checked, setChecked] = createSignal(additional.defaultChecked || false);
   createEffect(
     on(checked, (value) => {
       console.log("checked", value);
-      if (props.onCheckedChange) {
-        props.onCheckedChange(value);
+      if (additional.onCheckedChange) {
+        additional.onCheckedChange(value);
       }
     })
   );
   return (
     <styled.label
-      for={props.id}
+      for={rest.id}
       class={square({
         display: "inline-grid",
         placeItems: "center",
@@ -37,8 +43,7 @@ export default function Checkbox(props: CheckboxProps) {
       })}
     >
       <button
-        {...props}
-        id={props.id}
+        {...rest}
         role="checkbox"
         type="button"
         onClick={() => {

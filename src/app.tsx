@@ -1,16 +1,15 @@
 // @refresh reload
 import "./app.css";
-import { Flex, VStack, styled } from "styled-system/jsx";
+import { VStack, styled } from "styled-system/jsx";
 import { css } from "styled-system/css";
-import Checkbox from "~/components/checkbox";
 import { createSignal, For } from "solid-js";
+import TaskItem from "~/components/task-item";
 
 type Todo = {
   text: string;
   completed: boolean;
 };
 export default function App() {
-  // cannot start with a space
   const [todos, setTodos] = createSignal(new Array<Todo>());
   return (
     <VStack maxWidth="4xl" minH="screen" py="16" mx="auto" gap="8">
@@ -53,43 +52,47 @@ export default function App() {
           })}
         />
       </styled.form>
-      <ul
-        class={css({
-          listStyleType: "none",
-          m: "0",
-          p: "0",
-          w: "full"
-        })}
+      <styled.ul
+        display="flex"
+        flexDirection="column"
+        px="6"
+        listStyleType="none"
+        m="0"
+        p="0"
+        w="full"
+        gap="6"
       >
         <For each={todos()}>
-          {(todo) => (
-            <li>
-              <Flex
-                px="8"
-                h="12"
-                w="full"
-                gap="3"
-                justifyContent="flex-start"
-                alignItems="center"
-                borderBottomWidth="1"
-                borderBottomColor="warmGray.200"
-              >
-                <Checkbox defaultChecked={todo.completed} />
-                <span
-                  class={css({
-                    color: "warmGray.700",
-                    fontSize: "xl",
-                    fontWeight: "medium",
-                    textDecoration: todo.completed ? "line-through" : "none"
-                  })}
-                >
-                  {todo.text}
-                </span>
-              </Flex>
-            </li>
+          {(todo, index) => (
+            <styled.li w="full">
+              <TaskItem
+                onChange={(checked) => {
+                  const newTodos = [...todos()];
+                  newTodos[index()].completed = checked;
+                  setTodos(newTodos);
+                }}
+                onDelete={(e) => {
+                  const currentEl = e.currentTarget.parentElement;
+                  const prevEl = currentEl?.previousElementSibling;
+                  const nextEl = currentEl?.nextElementSibling;
+                  const newTodos = [...todos()];
+                  newTodos.splice(index(), 1);
+                  setTodos(newTodos);
+                  if (nextEl) {
+                    nextEl.querySelector("button")?.focus();
+                  } else if (prevEl) {
+                    prevEl.querySelector("button")?.focus();
+                  }
+                }}
+                id={index().toString()}
+                completed={todo.completed}
+                title={todo.text}
+                description="test"
+              />
+            </styled.li>
           )}
         </For>
-      </ul>
+      </styled.ul>
     </VStack>
   );
 }

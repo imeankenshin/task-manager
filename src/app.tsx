@@ -13,7 +13,7 @@ export default function App() {
   const [todos, setTodos] = createSignal(new Array<Todo>());
   const [lastFocusedTask, setLastFocusedTask] = createSignal<HTMLElement>();
   let taskListRef: HTMLElement;
-
+  let inputRef: HTMLInputElement;
   return (
     <VStack
       maxWidth="4xl"
@@ -25,19 +25,29 @@ export default function App() {
         const currentEl = lastFocusedTask();
         switch (e.key) {
           case "Escape": {
-            if (currentEl) {
+            if (currentEl && document.body.contains(currentEl)) {
               currentEl.querySelector("button")?.focus();
-            } else if (taskListRef.firstElementChild) {
+              break;
+            }
+            if (taskListRef.firstElementChild) {
               taskListRef.firstElementChild.querySelector("button")?.focus();
               setLastFocusedTask(taskListRef.firstElementChild as HTMLElement);
-            } else {
-              e.currentTarget.querySelector("input")?.blur();
+              break;
             }
+            e.currentTarget.querySelector("input")?.blur();
+            break;
+          }
+          case "/": {
+            e.preventDefault();
+            inputRef?.focus();
             break;
           }
           case "ArrowDown":
           case "k": {
-            if (currentEl) {
+            if (document.activeElement === inputRef) {
+              break;
+            }
+            if (currentEl && document.body.contains(currentEl)) {
               const prevEl = currentEl.previousElementSibling;
               if (prevEl) {
                 prevEl.querySelector("button")?.focus();
@@ -53,7 +63,10 @@ export default function App() {
           }
           case "ArrowUp":
           case "j": {
-            if (currentEl) {
+            if (document.activeElement === inputRef) {
+              break;
+            }
+            if (currentEl && document.body.contains(currentEl)) {
               const nextEl = currentEl.nextElementSibling;
               if (nextEl) {
                 nextEl.querySelector("button")?.focus();
@@ -66,7 +79,6 @@ export default function App() {
               setLastFocusedTask(taskListRef.firstElementChild as HTMLElement);
             }
           }
-
         }
       }}
     >
@@ -88,6 +100,9 @@ export default function App() {
         <input
           name="text"
           id="text"
+          ref={(el) => {
+            inputRef = el;
+          }}
           autocomplete="off"
           placeholder="What do you need to do?"
           class={css({

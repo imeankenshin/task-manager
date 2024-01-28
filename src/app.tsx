@@ -42,7 +42,7 @@ export default function App() {
             inputRef?.focus();
             break;
           }
-          case "ArrowDown":
+          case "ArrowUp":
           case "k": {
             if (document.activeElement === inputRef) {
               break;
@@ -61,7 +61,7 @@ export default function App() {
             }
             break;
           }
-          case "ArrowUp":
+          case "ArrowDown":
           case "j": {
             if (document.activeElement === inputRef) {
               break;

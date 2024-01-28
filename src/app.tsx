@@ -11,8 +11,65 @@ type Todo = {
 };
 export default function App() {
   const [todos, setTodos] = createSignal(new Array<Todo>());
+  const [lastFocusedTask, setLastFocusedTask] = createSignal<HTMLElement>();
+  let taskListRef: HTMLElement;
+
   return (
-    <VStack maxWidth="4xl" minH="screen" py="16" mx="auto" gap="8">
+    <VStack
+      maxWidth="4xl"
+      minH="screen"
+      py="16"
+      mx="auto"
+      gap="8"
+      onKeyDown={(e) => {
+        const currentEl = lastFocusedTask();
+        switch (e.key) {
+          case "Escape": {
+            if (currentEl) {
+              currentEl.querySelector("button")?.focus();
+            } else if (taskListRef.firstElementChild) {
+              taskListRef.firstElementChild.querySelector("button")?.focus();
+              setLastFocusedTask(taskListRef.firstElementChild as HTMLElement);
+            } else {
+              e.currentTarget.querySelector("input")?.blur();
+            }
+            break;
+          }
+          case "ArrowDown":
+          case "k": {
+            if (currentEl) {
+              const prevEl = currentEl.previousElementSibling;
+              if (prevEl) {
+                prevEl.querySelector("button")?.focus();
+                setLastFocusedTask(prevEl as HTMLElement);
+                break;
+              }
+            }
+            if (taskListRef.lastElementChild) {
+              taskListRef.lastElementChild.querySelector("button")?.focus();
+              setLastFocusedTask(taskListRef.lastElementChild as HTMLElement);
+            }
+            break;
+          }
+          case "ArrowUp":
+          case "j": {
+            if (currentEl) {
+              const nextEl = currentEl.nextElementSibling;
+              if (nextEl) {
+                nextEl.querySelector("button")?.focus();
+                setLastFocusedTask(nextEl as HTMLElement);
+                break;
+              }
+            }
+            if (taskListRef.firstElementChild) {
+              taskListRef.firstElementChild.querySelector("button")?.focus();
+              setLastFocusedTask(taskListRef.firstElementChild as HTMLElement);
+            }
+          }
+
+        }
+      }}
+    >
       <styled.form
         display="flex"
         w="full"
@@ -53,6 +110,8 @@ export default function App() {
         />
       </styled.form>
       <styled.ul
+        id="task-list"
+        ref={(el) => (taskListRef = el)}
         display="flex"
         flexDirection="column"
         px="6"

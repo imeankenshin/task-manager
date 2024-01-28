@@ -41,6 +41,7 @@ export default function TaskItem(props: TaskItemProps) {
       aria-describedby={descriptionId()}
     >
       <Checkbox
+        tabindex={-1}
         id={checkboxId()}
         defaultChecked={props.completed}
         onCheckedChange={(checked) => {

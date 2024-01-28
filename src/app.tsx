@@ -126,7 +126,6 @@ export default function App() {
       </styled.form>
       <styled.ul
         id="task-list"
-        ref={(el) => (taskListRef = el)}
         display="flex"
         flexDirection="column"
         px="6"
@@ -135,6 +134,8 @@ export default function App() {
         p="0"
         w="full"
         gap="6"
+        tabindex="0"
+        ref={(el) => (taskListRef = el)}
       >
         <For each={todos()}>
           {(todo, index) => (

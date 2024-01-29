@@ -11,8 +11,77 @@ type Todo = {
 };
 export default function App() {
   const [todos, setTodos] = createSignal(new Array<Todo>());
+  const [lastFocusedTask, setLastFocusedTask] = createSignal<HTMLElement>();
+  let taskListRef: HTMLElement;
+  let inputRef: HTMLInputElement;
   return (
-    <VStack maxWidth="4xl" minH="screen" py="16" mx="auto" gap="8">
+    <VStack
+      maxWidth="4xl"
+      minH="screen"
+      py="16"
+      mx="auto"
+      gap="8"
+      onKeyDown={(e) => {
+        const currentEl = lastFocusedTask();
+        switch (e.key) {
+          case "Escape": {
+            if (currentEl && document.body.contains(currentEl)) {
+              currentEl.querySelector("button")?.focus();
+              break;
+            }
+            if (taskListRef.firstElementChild) {
+              taskListRef.firstElementChild.querySelector("button")?.focus();
+              setLastFocusedTask(taskListRef.firstElementChild as HTMLElement);
+              break;
+            }
+            e.currentTarget.querySelector("input")?.blur();
+            break;
+          }
+          case "/": {
+            e.preventDefault();
+            inputRef?.focus();
+            break;
+          }
+          case "ArrowUp":
+          case "k": {
+            if (document.activeElement === inputRef) {
+              break;
+            }
+            if (currentEl && document.body.contains(currentEl)) {
+              const prevEl = currentEl.previousElementSibling;
+              if (prevEl) {
+                prevEl.querySelector("button")?.focus();
+                setLastFocusedTask(prevEl as HTMLElement);
+                break;
+              }
+            }
+            if (taskListRef.lastElementChild) {
+              taskListRef.lastElementChild.querySelector("button")?.focus();
+              setLastFocusedTask(taskListRef.lastElementChild as HTMLElement);
+            }
+            break;
+          }
+          case "ArrowDown":
+          case "j": {
+            if (document.activeElement === inputRef) {
+              break;
+            }
+            if (currentEl && document.body.contains(currentEl)) {
+              const nextEl = currentEl.nextElementSibling;
+              if (nextEl) {
+                nextEl.querySelector("button")?.focus();
+                setLastFocusedTask(nextEl as HTMLElement);
+                break;
+              }
+            }
+            if (taskListRef.firstElementChild) {
+              taskListRef.firstElementChild.querySelector("button")?.focus();
+              setLastFocusedTask(taskListRef.firstElementChild as HTMLElement);
+            }
+          }
+        }
+      }}
+    >
       <styled.form
         display="flex"
         w="full"
@@ -31,6 +100,9 @@ export default function App() {
         <input
           name="text"
           id="text"
+          ref={(el) => {
+            inputRef = el;
+          }}
           autocomplete="off"
           placeholder="What do you need to do?"
           class={css({
@@ -53,6 +125,7 @@ export default function App() {
         />
       </styled.form>
       <styled.ul
+        id="task-list"
         display="flex"
         flexDirection="column"
         px="6"
@@ -61,6 +134,8 @@ export default function App() {
         p="0"
         w="full"
         gap="6"
+        tabindex="0"
+        ref={(el) => (taskListRef = el)}
       >
         <For each={todos()}>
           {(todo, index) => (
@@ -82,6 +157,8 @@ export default function App() {
                     nextEl.querySelector("button")?.focus();
                   } else if (prevEl) {
                     prevEl.querySelector("button")?.focus();
+                  } else {
+                    inputRef?.focus();
                   }
                 }}
                 id={index().toString()}

@@ -157,6 +157,8 @@ export default function App() {
                     nextEl.querySelector("button")?.focus();
                   } else if (prevEl) {
                     prevEl.querySelector("button")?.focus();
+                  } else {
+                    inputRef?.focus();
                   }
                 }}
                 id={index().toString()}

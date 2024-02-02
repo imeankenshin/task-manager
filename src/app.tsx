@@ -4,7 +4,7 @@ import { VStack, styled } from "styled-system/jsx";
 import { css } from "styled-system/css";
 import { createSignal, For } from "solid-js";
 import TaskItem from "~/components/task-item";
-import { FocusableGroup } from "~/components/focusable";
+import { FocusableGroup, FocusableItem } from "~/components/focusable";
 import { vstack } from "styled-system/patterns";
 
 type Todo = {
@@ -14,26 +14,6 @@ type Todo = {
 export default function App() {
   const [todos, setTodos] = createSignal(new Array<Todo>());
   const [lastFocusedTask, setLastFocusedTask] = createSignal<HTMLElement>();
-  const focusHandler = (next: boolean) => {
-    const currentEl = lastFocusedTask();
-    if (document.activeElement === inputRef) {
-      return;
-    }
-    if (currentEl && document.body.contains(currentEl)) {
-      const nextEl = next ? currentEl.nextElementSibling : currentEl.previousElementSibling;
-      if (nextEl) {
-        nextEl.querySelector("button")?.focus();
-        setLastFocusedTask(nextEl as HTMLElement);
-        return;
-      }
-    }
-    const nextEl = next ? taskListRef.firstElementChild : taskListRef.lastElementChild;
-
-    if (nextEl) {
-      nextEl.querySelector("button")?.focus();
-      setLastFocusedTask(nextEl as HTMLElement);
-    }
-  };
   let taskListRef: HTMLElement;
   let inputRef: HTMLInputElement;
   return (
@@ -129,12 +109,15 @@ export default function App() {
             color: "warmGray.300"
           }
         })}
-        onNext={() => focusHandler(true)}
-        onPrevious={() => focusHandler(false)}
       >
         <For each={todos()}>
           {(todo, index) => (
-            <styled.li w="full">
+            <FocusableItem
+              focusTarget="button"
+              class={css({
+                w: "full"
+              })}
+            >
               <TaskItem
                 onChange={(checked) => {
                   const newTodos = [...todos()];
@@ -161,7 +144,7 @@ export default function App() {
                 title={todo.text}
                 description="test"
               />
-            </styled.li>
+            </FocusableItem>
           )}
         </For>
       </FocusableGroup>

@@ -4,6 +4,8 @@ import { VStack, styled } from "styled-system/jsx";
 import { css } from "styled-system/css";
 import { createSignal, For } from "solid-js";
 import TaskItem from "~/components/task-item";
+import { FocusableGroup } from "~/components/focusable";
+import { vstack } from "styled-system/patterns";
 
 type Todo = {
   text: string;
@@ -12,6 +14,26 @@ type Todo = {
 export default function App() {
   const [todos, setTodos] = createSignal(new Array<Todo>());
   const [lastFocusedTask, setLastFocusedTask] = createSignal<HTMLElement>();
+  const focusHandler = (next: boolean) => {
+    const currentEl = lastFocusedTask();
+    if (document.activeElement === inputRef) {
+      return;
+    }
+    if (currentEl && document.body.contains(currentEl)) {
+      const nextEl = next ? currentEl.nextElementSibling : currentEl.previousElementSibling;
+      if (nextEl) {
+        nextEl.querySelector("button")?.focus();
+        setLastFocusedTask(nextEl as HTMLElement);
+        return;
+      }
+    }
+    const nextEl = next ? taskListRef.firstElementChild : taskListRef.lastElementChild;
+
+    if (nextEl) {
+      nextEl.querySelector("button")?.focus();
+      setLastFocusedTask(nextEl as HTMLElement);
+    }
+  };
   let taskListRef: HTMLElement;
   let inputRef: HTMLInputElement;
   return (
@@ -41,43 +63,6 @@ export default function App() {
             e.preventDefault();
             inputRef?.focus();
             break;
-          }
-          case "ArrowUp":
-          case "k": {
-            if (document.activeElement === inputRef) {
-              break;
-            }
-            if (currentEl && document.body.contains(currentEl)) {
-              const prevEl = currentEl.previousElementSibling;
-              if (prevEl) {
-                prevEl.querySelector("button")?.focus();
-                setLastFocusedTask(prevEl as HTMLElement);
-                break;
-              }
-            }
-            if (taskListRef.lastElementChild) {
-              taskListRef.lastElementChild.querySelector("button")?.focus();
-              setLastFocusedTask(taskListRef.lastElementChild as HTMLElement);
-            }
-            break;
-          }
-          case "ArrowDown":
-          case "j": {
-            if (document.activeElement === inputRef) {
-              break;
-            }
-            if (currentEl && document.body.contains(currentEl)) {
-              const nextEl = currentEl.nextElementSibling;
-              if (nextEl) {
-                nextEl.querySelector("button")?.focus();
-                setLastFocusedTask(nextEl as HTMLElement);
-                break;
-              }
-            }
-            if (taskListRef.firstElementChild) {
-              taskListRef.firstElementChild.querySelector("button")?.focus();
-              setLastFocusedTask(taskListRef.firstElementChild as HTMLElement);
-            }
           }
         }
       }}
@@ -124,18 +109,28 @@ export default function App() {
           })}
         />
       </styled.form>
-      <styled.ul
+      <FocusableGroup
         id="task-list"
-        display="flex"
-        flexDirection="column"
-        px="6"
-        listStyleType="none"
-        m="0"
-        p="0"
-        w="full"
-        gap="6"
         tabindex="0"
         ref={(el) => (taskListRef = el)}
+        class={vstack({
+          borderRadius: "lg",
+          px: "6",
+          listStyleType: "none",
+          m: "0",
+          p: "0",
+          w: "full",
+          gap: "6",
+          outlineWidth: "4",
+          outlineOffset: "1",
+          outlineColor: "warmGray.700",
+          _ariaChecked: {
+            bgColor: "warmGray.800",
+            color: "warmGray.300"
+          }
+        })}
+        onNext={() => focusHandler(true)}
+        onPrevious={() => focusHandler(false)}
       >
         <For each={todos()}>
           {(todo, index) => (
@@ -169,7 +164,7 @@ export default function App() {
             </styled.li>
           )}
         </For>
-      </styled.ul>
+      </FocusableGroup>
     </VStack>
   );
 }

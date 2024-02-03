@@ -13,7 +13,6 @@ type Todo = {
 };
 export default function App() {
   const [todos, setTodos] = createSignal(new Array<Todo>());
-  const [lastFocusedTask, setLastFocusedTask] = createSignal<HTMLElement>();
   let taskListRef: HTMLElement;
   let inputRef: HTMLInputElement;
   return (
@@ -39,14 +38,8 @@ export default function App() {
         px="8"
         justifyContent="center"
         onKeyDown={(e) => {
-          const currentEl = lastFocusedTask();
-          if (e.key === "Escape") {
-            if (currentEl && document.body.contains(currentEl)) {
-              currentEl.querySelector("button")?.focus();
-            } else if (taskListRef.firstElementChild) {
-              taskListRef.firstElementChild.querySelector("button")?.focus();
-              setLastFocusedTask(taskListRef.firstElementChild as HTMLElement);
-            } else e.currentTarget.querySelector("input")?.blur();
+          if (e.key === "Escape" && taskListRef.firstElementChild instanceof HTMLElement) {
+            taskListRef.firstElementChild.querySelector("button")?.focus();
           }
         }}
         onSubmit={(e) => {

@@ -1,4 +1,4 @@
-import { JSX, mergeProps, splitProps, createSignal } from "solid-js";
+import { JSX, mergeProps, splitProps } from "solid-js";
 
 type AdditionalFocusableGroupProps = {
   direction?: "vertical" | "horizontal";
@@ -23,7 +23,6 @@ export function FocusableGroup(props: FocusableGroupProps) {
     "onNext",
     "focusTarget"
   ] as (keyof AdditionalFocusableGroupProps)[]);
-  const [lastFocusedIndex, setLastFocusedIndex] = createSignal(0);
   let groupEl: HTMLElement;
   const getNextElement = (parent: Element) => {
     const next = parent.nextElementSibling;
@@ -40,11 +39,19 @@ export function FocusableGroup(props: FocusableGroupProps) {
     return parent.parentElement?.lastElementChild as HTMLElement;
   };
   const focusHandler = (next: boolean) => {
-    const currentEl = groupEl.children[lastFocusedIndex()];
+    if (document.activeElement == groupEl && groupEl.firstElementChild instanceof HTMLElement) {
+      groupEl.firstElementChild
+        .querySelector<HTMLElement>(groupEl.firstElementChild.dataset.focusTarget as string)
+        ?.focus();
+      return;
+    }
+    const currentEl = Array.from(groupEl.children).find((el) =>
+      el.contains(document.activeElement)
+    );
+    if (!(currentEl instanceof HTMLElement)) return;
     const nextEl = next ? getNextElement(currentEl) : getPreviousElement(currentEl);
     if (nextEl instanceof HTMLElement) {
       nextEl.querySelector<HTMLElement>(nextEl.dataset.focusTarget as string)?.focus();
-      setLastFocusedIndex(Array.from(groupEl.children).indexOf(nextEl));
     }
   };
 
@@ -52,10 +59,6 @@ export function FocusableGroup(props: FocusableGroupProps) {
     <ul
       {...rest}
       tabindex={0}
-      data-last-focused-index={lastFocusedIndex()}
-      onFocusOut={() => {
-        setLastFocusedIndex(0);
-      }}
       onKeyDown={(e) => {
         const isHorizontal = additional.direction === "horizontal";
         const isVertical = additional.direction === "vertical";

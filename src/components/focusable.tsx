@@ -23,43 +23,53 @@ export function FocusableGroup(props: FocusableGroupProps) {
     "onNext",
     "focusTarget"
   ] as (keyof AdditionalFocusableGroupProps)[]);
-  const [lastFocusedTask, setLastFocusedTask] = createSignal<HTMLElement>();
+  const [lastFocusedIndex, setLastFocusedIndex] = createSignal(0);
   let groupEl: HTMLElement;
-  const focusHandler = (next: boolean) => {
-    const currentEl = lastFocusedTask();
-    if (currentEl && groupEl.contains(currentEl)) {
-      const nextEl = next ? currentEl.previousElementSibling : currentEl.nextElementSibling;
-      if (nextEl instanceof HTMLElement && typeof nextEl.dataset.focusTarget) {
-        nextEl.querySelector<HTMLElement>(nextEl.dataset.focusTarget as string)?.focus();
-        setLastFocusedTask(nextEl);
-        return;
-      }
+  const getNextElement = (parent: Element) => {
+    const next = parent.nextElementSibling;
+    if (next instanceof HTMLElement) {
+      return next;
     }
-    const nextEl = next ? groupEl.lastElementChild : groupEl.firstElementChild;
-    if (nextEl instanceof HTMLElement && nextEl.dataset.focusTarget) {
-      nextEl.querySelector<HTMLElement>(nextEl.dataset.focusTarget)?.focus();
-      setLastFocusedTask(nextEl);
+    return parent.parentElement?.firstElementChild as HTMLElement;
+  };
+  const getPreviousElement = (parent: Element) => {
+    const previous = parent.previousElementSibling;
+    if (previous instanceof HTMLElement) {
+      return previous;
+    }
+    return parent.parentElement?.lastElementChild as HTMLElement;
+  };
+  const focusHandler = (next: boolean) => {
+    const currentEl = groupEl.children[lastFocusedIndex()];
+    const nextEl = next ? getNextElement(currentEl) : getPreviousElement(currentEl);
+    if (nextEl instanceof HTMLElement) {
+      nextEl.querySelector<HTMLElement>(nextEl.dataset.focusTarget as string)?.focus();
+      setLastFocusedIndex(Array.from(groupEl.children).indexOf(nextEl));
     }
   };
 
   return (
     <ul
       {...rest}
+      tabindex={0}
+      data-last-focused-index={lastFocusedIndex()}
+      onFocusOut={() => {
+        setLastFocusedIndex(0);
+      }}
       onKeyDown={(e) => {
         const isHorizontal = additional.direction === "horizontal";
         const isVertical = additional.direction === "vertical";
         const isUpOrRight = ["ArrowUp", "ArrowLeft", "k"].includes(e.key);
         const isDownOrLeft = ["ArrowDown", "ArrowRight", "j"].includes(e.key);
         if ((isHorizontal && isUpOrRight) || (isVertical && isDownOrLeft)) {
-          if (additional.onNext) additional.onNext(e);
-          if (!e.defaultPrevented) focusHandler(false);
-        } else if ((isHorizontal && isDownOrLeft) || (isVertical && isUpOrRight)) {
           if (additional.onPrevious) additional.onPrevious(e);
           if (!e.defaultPrevented) focusHandler(true);
+        } else if ((isHorizontal && isDownOrLeft) || (isVertical && isUpOrRight)) {
+          if (additional.onNext) additional.onNext(e);
+          if (!e.defaultPrevented) focusHandler(false);
         }
       }}
       ref={(el) => (groupEl = el)}
-      tabindex={0}
     />
   );
 }

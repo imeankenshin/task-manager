@@ -24,21 +24,7 @@ export default function App() {
       mx="auto"
       gap="8"
       onKeyDown={(e) => {
-        const currentEl = lastFocusedTask();
         switch (e.key) {
-          case "Escape": {
-            if (currentEl && document.body.contains(currentEl)) {
-              currentEl.querySelector("button")?.focus();
-              break;
-            }
-            if (taskListRef.firstElementChild) {
-              taskListRef.firstElementChild.querySelector("button")?.focus();
-              setLastFocusedTask(taskListRef.firstElementChild as HTMLElement);
-              break;
-            }
-            e.currentTarget.querySelector("input")?.blur();
-            break;
-          }
           case "/": {
             e.preventDefault();
             inputRef?.focus();
@@ -52,6 +38,17 @@ export default function App() {
         w="full"
         px="8"
         justifyContent="center"
+        onKeyDown={(e) => {
+          const currentEl = lastFocusedTask();
+          if (e.key === "Escape") {
+            if (currentEl && document.body.contains(currentEl)) {
+              currentEl.querySelector("button")?.focus();
+            } else if (taskListRef.firstElementChild) {
+              taskListRef.firstElementChild.querySelector("button")?.focus();
+              setLastFocusedTask(taskListRef.firstElementChild as HTMLElement);
+            } else e.currentTarget.querySelector("input")?.blur();
+          }
+        }}
         onSubmit={(e) => {
           const input = e.currentTarget.querySelector("input");
           const formData = new FormData(e.currentTarget);
@@ -91,7 +88,6 @@ export default function App() {
       </styled.form>
       <FocusableGroup
         id="task-list"
-        tabindex="0"
         ref={(el) => (taskListRef = el)}
         class={vstack({
           borderRadius: "lg",

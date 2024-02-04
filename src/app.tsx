@@ -17,8 +17,9 @@ export default function App() {
   let inputRef: HTMLInputElement;
   return (
     <VStack
-      maxWidth="4xl"
+      maxWidth="3xl"
       minH="screen"
+      px="6"
       py="16"
       mx="auto"
       gap="8"
@@ -35,7 +36,6 @@ export default function App() {
       <styled.form
         display="flex"
         w="full"
-        px="8"
         justifyContent="center"
         onKeyDown={(e) => {
           if (e.key === "Escape" && taskListRef.firstElementChild instanceof HTMLElement) {
@@ -66,7 +66,6 @@ export default function App() {
             fontSize: "xl",
             fontWeight: "medium",
             h: "14",
-            maxWidth: 674,
             outlineOffset: "1",
             outlineWidth: "4",
             outlineColor: "warmGray.700",

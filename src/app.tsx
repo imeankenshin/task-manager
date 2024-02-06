@@ -41,9 +41,11 @@ export default function App() {
         gap="8"
         onKeyDown={(e) => {
           switch (e.key) {
-            case "/": {
-              e.preventDefault();
-              setCommandIsOpen(true);
+            case "c": {
+              if (document.activeElement !== inputRef) {
+                e.preventDefault();
+                setCommandIsOpen(true);
+              }
               break;
             }
           }

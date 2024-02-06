@@ -2,12 +2,12 @@ import { JSX, mergeProps, splitProps } from "solid-js";
 
 type AdditionalFocusableGroupProps = {
   direction?: "vertical" | "horizontal";
-  onPrevious?: JSX.EventHandler<HTMLUListElement, KeyboardEvent>;
-  onNext?: JSX.EventHandler<HTMLUListElement, KeyboardEvent>;
+  onPrevious?: JSX.EventHandler<HTMLDivElement, KeyboardEvent>;
+  onNext?: JSX.EventHandler<HTMLDivElement, KeyboardEvent>;
   focusTarget?: string;
 };
 type FocusableGroupProps = Omit<
-  JSX.HTMLAttributes<HTMLUListElement>,
+  JSX.HTMLAttributes<HTMLDivElement>,
   keyof AdditionalFocusableGroupProps
 > &
   AdditionalFocusableGroupProps;
@@ -56,7 +56,7 @@ export function FocusableGroup(props: FocusableGroupProps) {
   };
 
   return (
-    <ul
+    <div
       {...rest}
       tabindex={0}
       onKeyDown={(e) => {
@@ -86,7 +86,7 @@ type AdditionalFocusableItemProps =
     };
 
 type FocusableItemProps = Omit<
-  JSX.HTMLAttributes<HTMLLIElement>,
+  JSX.HTMLAttributes<HTMLDivElement>,
   keyof AdditionalFocusableItemProps
 > &
   AdditionalFocusableItemProps;
@@ -95,5 +95,5 @@ export function FocusableItem(props: FocusableItemProps) {
   const [additional, rest] = splitProps(props, [
     "focusTarget"
   ] as (keyof AdditionalFocusableItemProps)[]);
-  return <li {...rest} data-focus-target={additional.focusTarget} />;
+  return <div {...rest} data-focus-target={additional.focusTarget} />;
 }

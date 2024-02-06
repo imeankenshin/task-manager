@@ -66,31 +66,6 @@ export default function TaskItem(props: TaskItemProps) {
           >
             {props.title}
           </span>
-          <div
-            class={css({
-              display: "none",
-              _groupFocusWithin: {
-                display: "block"
-              },
-              _groupHover: {
-                display: "block"
-              }
-            })}
-          >
-            <button
-              tabIndex={-1}
-              class={css({
-                color: "warmGray.500",
-                fontSize: "lg",
-                textDecoration: "none",
-                _hover: {
-                  textDecoration: "underline"
-                }
-              })}
-            >
-              Edit
-            </button>
-          </div>
         </HStack>
         <Show when={props.description}>
           <div

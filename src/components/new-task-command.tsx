@@ -27,13 +27,12 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
       <Dialog.Positioner
         class={css({
           w: "screen",
-          h: "screen",
           position: "fixed",
           display: "flex",
           alignItems: "top",
           justifyContent: "center",
           pt: "32",
-          bottom: "0",
+          top: "0",
           left: "0",
           right: "0",
           zIndex: "10"

@@ -55,7 +55,6 @@ export default function App() {
           id="task-list"
           class={vstack({
             borderRadius: "lg",
-            px: "6",
             listStyleType: "none",
             m: "0",
             p: "0",

@@ -25,7 +25,6 @@ export default function Checkbox(props: CheckboxProps) {
   const [checked, setChecked] = createSignal(additional.defaultChecked || false);
   createEffect(
     on(checked, (value) => {
-      console.log("checked", value);
       if (additional.onCheckedChange) {
         additional.onCheckedChange(value);
       }

@@ -18,12 +18,16 @@ export default function App() {
   const [todos, setTodos] = createSignal(new Array<Todo>());
   const [commandIsOpen, setCommandIsOpen] = createSignal(false);
   const focusTarget = "button";
+  let taskListRef: HTMLElement;
   let inputRef: HTMLInputElement;
   return (
     <Dialog.Root
       open={commandIsOpen()}
       onOpenChange={(e) => {
         setCommandIsOpen(e.open);
+        if (!e.open && taskListRef.firstElementChild) {
+          taskListRef.firstElementChild.querySelector(focusTarget)?.focus();
+        }
       }}
     >
       <VStack
@@ -54,6 +58,7 @@ export default function App() {
         <Show when={todos().length !== 0} fallback={<NoTasks />}>
           <FocusableGroup
             id="task-list"
+            ref={(el) => (taskListRef = el)}
             class={vstack({
               borderRadius: "lg",
               listStyleType: "none",

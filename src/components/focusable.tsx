@@ -72,7 +72,10 @@ export function FocusableGroup(props: FocusableGroupProps) {
           if (!e.defaultPrevented) focusHandler(false);
         }
       }}
-      ref={(el) => (groupEl = el)}
+      ref={(el) => {
+        groupEl = el;
+        if (typeof rest.ref === "function") rest.ref(el);
+      }}
     />
   );
 }

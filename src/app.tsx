@@ -22,12 +22,10 @@ export default function App() {
   let inputRef: HTMLInputElement;
   return (
     <Dialog.Root
+      finalFocusEl={() => taskListRef.firstElementChild?.querySelector(focusTarget) || null}
       open={commandIsOpen()}
       onOpenChange={(e) => {
         setCommandIsOpen(e.open);
-        if (!e.open && taskListRef.firstElementChild) {
-          taskListRef.firstElementChild.querySelector(focusTarget)?.focus();
-        }
       }}
     >
       <VStack

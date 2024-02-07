@@ -56,9 +56,8 @@ export default function TaskItem(props: TaskItemProps) {
             id={titleId()}
             class={css({
               width: "full",
-              color: "warmGray.700",
               fontSize: "xl",
-              fontWeight: "bold",
+              fontWeight: "medium",
               _groupHasChecked: {
                 textDecoration: "line-through"
               }

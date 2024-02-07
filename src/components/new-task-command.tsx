@@ -71,13 +71,17 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
                 flex: 8,
                 fontSize: "xl",
                 fontWeight: "medium",
-                h: "14",
-                outlineOffset: "1",
-                outlineWidth: "4",
-                outlineColor: "warmGray.700",
-                px: "5",
+                h: "16",
+                borderWidth: "1px",
+                borderStyle: "solid",
+                borderColor: "warmGray.400",
+                px: "6",
                 rounded: "xl",
                 w: "full",
+                boxShadow: "2xl",
+                _focus: {
+                  outline: "none"
+                },
                 _placeholder: {
                   color: "warmGray.500"
                 }

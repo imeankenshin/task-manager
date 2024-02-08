@@ -2,9 +2,10 @@ import { Portal } from "solid-js/web";
 import { Dialog } from "@ark-ui/solid";
 import { styled } from "styled-system/jsx";
 import { css } from "styled-system/css";
+import { Todo } from "~/types/todo";
 
 type NewTaskCommandProps = {
-  onAdd: (text: string) => void;
+  onAdd: (todo: Todo) => void;
   inputRef: (el: HTMLInputElement) => void;
 };
 export function NewTaskCommand(props: NewTaskCommandProps) {
@@ -52,10 +53,17 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
             onSubmit={(e) => {
               const input = e.currentTarget.querySelector("input");
               const formData = new FormData(e.currentTarget);
-              const text = (formData.get("text") || "").toString().trim();
+              const title = (formData.get("text") || "").toString().trim();
               e.preventDefault();
-              if (text && input) {
-                props.onAdd(text);
+              if (title && input) {
+                props.onAdd({
+                  createdAt: new Date(),
+                  deadline: new Date(),
+                  description: "",
+                  id: Date.now().toString(),
+                  status: "todo",
+                  title
+                });
               }
               e.currentTarget.reset();
             }}

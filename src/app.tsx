@@ -69,11 +69,7 @@ export default function App() {
               gap: "6",
               outlineWidth: "4",
               outlineOffset: "1",
-              outlineColor: "warmGray.700",
-              _ariaChecked: {
-                bgColor: "warmGray.800",
-                color: "warmGray.300"
-              }
+              outlineColor: "warmGray.700"
             })}
           >
             <For each={todos()}>
@@ -85,7 +81,7 @@ export default function App() {
                   })}
                 >
                   <TaskItem
-                    onChange={(checked) => {
+                    onStatusChange={(checked) => {
                       const newTodos = [...todos()];
                       newTodos[index()].status = checked ? "done" : "todo";
                       setTodos(newTodos);
@@ -106,7 +102,7 @@ export default function App() {
                       }
                     }}
                     id={index().toString()}
-                    completed={todo.status === "done"}
+                    status={todo.status}
                     title={todo.title}
                     description="test"
                   />

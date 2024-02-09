@@ -1,15 +1,16 @@
 import { Flex, HStack } from "styled-system/jsx";
-import Checkbox from "~/components/checkbox";
+import StatusBox from "~/components/status-box";
 import { css } from "styled-system/css";
 import { JSX, Show } from "solid-js";
+import { TodoStatusValue } from "~/types/todo";
 
 type TaskItemProps = {
   id: string;
   title: string;
   description?: string;
-  completed: boolean;
+  status: TodoStatusValue;
   onDelete?: JSX.EventHandler<HTMLDivElement, Event>;
-  onChange?: (checked: boolean) => void;
+  onStatusChange?: (status: TodoStatusValue) => void;
 };
 
 export default function TaskItem(props: TaskItemProps) {
@@ -40,13 +41,13 @@ export default function TaskItem(props: TaskItemProps) {
       aria-labelledby={titleId()}
       aria-describedby={descriptionId()}
     >
-      <Checkbox
+      <StatusBox
         tabindex={-1}
         id={checkboxId()}
-        defaultChecked={props.completed}
-        onCheckedChange={(checked) => {
-          if (props.onChange) {
-            props.onChange(checked);
+        defaultStatus={props.status}
+        onStatusChange={(status) => {
+          if (props.onStatusChange) {
+            props.onStatusChange(status);
           }
         }}
       />
@@ -58,7 +59,7 @@ export default function TaskItem(props: TaskItemProps) {
               width: "full",
               fontSize: "xl",
               fontWeight: "medium",
-              _groupHasChecked: {
+              _groupHasDone: {
                 textDecoration: "line-through"
               }
             })}
@@ -68,7 +69,7 @@ export default function TaskItem(props: TaskItemProps) {
         </HStack>
         <Show when={props.description}>
           <div
-            data-completed={props.completed}
+            data-completed={props.status}
             id={descriptionId()}
             class={css({
               color: "warmGray.700",

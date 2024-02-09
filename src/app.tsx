@@ -9,7 +9,7 @@ import { vstack } from "styled-system/patterns";
 import { NewTaskCommand } from "~/components/new-task-command";
 import { Dialog } from "@ark-ui/solid";
 import { NoTasks } from "~/components/no-tasks";
-import { Todo } from "~/types/todo";
+import { Todo, TodoStatus } from "~/types/todo";
 
 export default function App() {
   const [todos, setTodos] = createSignal(new Array<Todo>());
@@ -50,7 +50,16 @@ export default function App() {
       >
         <NewTaskCommand
           onAdd={(todo) => {
-            setTodos([...todos(), todo]);
+            setTodos([
+              ...todos(),
+              {
+                ...todo,
+                id: Math.random().toString(36).substring(7),
+                status: TodoStatus.TODO,
+                createdAt: new Date(),
+                updatedAt: new Date()
+              }
+            ]);
             setCommandIsOpen(false);
           }}
           inputRef={(el) => (inputRef = el)}
@@ -101,10 +110,7 @@ export default function App() {
                         inputRef?.focus();
                       }
                     }}
-                    id={index().toString()}
-                    status={todo.status}
-                    title={todo.title}
-                    description="test"
+                    {...todo}
                   />
                 </FocusableItem>
               )}

@@ -2,13 +2,9 @@ import { Flex, HStack } from "styled-system/jsx";
 import StatusBox from "~/components/status-box";
 import { css } from "styled-system/css";
 import { JSX, Show } from "solid-js";
-import { TodoStatusValue } from "~/types/todo";
+import { Todo, TodoStatusValue } from "~/types/todo";
 
-type TaskItemProps = {
-  id: string;
-  title: string;
-  description?: string;
-  status: TodoStatusValue;
+type TaskItemProps = Todo & {
   onDelete?: JSX.EventHandler<HTMLDivElement, Event>;
   onStatusChange?: (status: TodoStatusValue) => void;
 };

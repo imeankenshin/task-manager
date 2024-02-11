@@ -2,25 +2,28 @@ import { Portal } from "solid-js/web";
 import { Dialog } from "@ark-ui/solid";
 import { styled } from "styled-system/jsx";
 import { css } from "styled-system/css";
+import { TodoInput } from "~/types/todo";
+import { vstack } from "styled-system/patterns";
 
 type NewTaskCommandProps = {
-  onAdd: (text: string) => void;
+  onAdd: (todo: TodoInput) => void;
   inputRef: (el: HTMLInputElement) => void;
 };
+
 export function NewTaskCommand(props: NewTaskCommandProps) {
   return (
     <Portal>
       <Dialog.Backdrop
         class={css({
-          w: "screen",
-          h: "screen",
-          position: "fixed",
-          top: "0",
-          left: "0",
-          right: "0",
-          bottom: "0",
-          bgColor: "rgba(0, 0, 0, 0.2)",
           backdropBlur: "md",
+          bgColor: "rgba(0, 0, 0, 0.2)",
+          bottom: "0",
+          h: "screen",
+          left: "0",
+          position: "fixed",
+          right: "0",
+          top: "0",
+          w: "screen",
           zIndex: "10"
         })}
       />
@@ -50,41 +53,74 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
             w="full"
             justifyContent="center"
             onSubmit={(e) => {
-              const input = e.currentTarget.querySelector("input");
-              const formData = new FormData(e.currentTarget);
-              const text = (formData.get("text") || "").toString().trim();
+              const input = e.currentTarget.querySelector("input"),
+                formData = new FormData(e.currentTarget),
+                title = (formData.get("text") || "").toString().trim(),
+                description = (formData.get("description") || "").toString().trim();
               e.preventDefault();
-              if (text && input) {
-                props.onAdd(text);
+              if (title && input) {
+                props.onAdd({
+                  description: description || null,
+                  deadline: new Date(),
+                  title
+                });
               }
               e.currentTarget.reset();
             }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && e.metaKey) {
+                e.currentTarget.dispatchEvent(new Event("submit"));
+              }
+            }}
+            class={vstack({
+              alignItems: "center",
+              bgColor: "warmGray.50",
+              borderColor: "warmGray.400",
+              borderRadius: "2xl",
+              borderStyle: "solid",
+              borderWidth: "1px",
+              boxShadow: "2xl",
+              gap: "4",
+              padding: "6"
+            })}
           >
             <input
               name="text"
               id="text"
               ref={props.inputRef}
+              required={true}
               autocomplete="off"
               placeholder="What do you need to do?"
               class={css({
-                bgColor: "warmGray.200",
-                flex: 8,
-                fontSize: "xl",
-                fontWeight: "medium",
-                h: "16",
-                borderWidth: "1px",
-                borderStyle: "solid",
-                borderColor: "warmGray.400",
-                px: "6",
-                rounded: "xl",
-                w: "full",
-                boxShadow: "2xl",
                 _focus: {
                   outline: "none"
                 },
                 _placeholder: {
                   color: "warmGray.500"
-                }
+                },
+                bgColor: "transparent",
+                fontSize: "xl",
+                fontWeight: "medium",
+                w: "full"
+              })}
+            />
+            <textarea
+              name="description"
+              id="description"
+              placeholder="Add a description"
+              rows={3}
+              class={css({
+                _focus: {
+                  outline: "none"
+                },
+                _placeholder: {
+                  color: "warmGray.500"
+                },
+                resize: "none",
+                bgColor: "transparent",
+                fontSize: "medium",
+                fontWeight: "medium",
+                w: "full"
               })}
             />
           </styled.form>

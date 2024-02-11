@@ -2,31 +2,32 @@ import { square } from "styled-system/patterns";
 import { createEffect, createSignal, JSX, on, Setter, splitProps } from "solid-js";
 import { styled } from "styled-system/jsx";
 import { css } from "styled-system/css";
+import { TodoStatusValue, TodoStatus } from "~/types/todo";
 
-type AdditionalCheckboxProps = {
-  checked?: boolean;
+type AdditionalStatusBoxProps = {
+  defaultStatus?: TodoStatusValue;
+  onStatusChange?: (status: TodoStatusValue) => void;
   setChecked?: Setter<boolean>;
-  defaultChecked?: boolean;
-  onCheckedChange?: (checked: boolean) => void;
+  status?: TodoStatusValue;
 };
 
-type CheckboxProps = Omit<
+type StatusBoxProps = Omit<
   JSX.ButtonHTMLAttributes<HTMLButtonElement>,
-  keyof AdditionalCheckboxProps
+  keyof AdditionalStatusBoxProps
 > &
-  AdditionalCheckboxProps;
-export default function Checkbox(props: CheckboxProps) {
+  AdditionalStatusBoxProps;
+export default function StatusBox(props: StatusBoxProps) {
   const [additional, rest] = splitProps(props, [
-    "checked",
+    "status",
     "setChecked",
-    "defaultChecked",
-    "onCheckedChange"
-  ] as (keyof AdditionalCheckboxProps)[]);
-  const [checked, setChecked] = createSignal(additional.defaultChecked || false);
+    "defaultStatus",
+    "onStatusChange"
+  ] as (keyof AdditionalStatusBoxProps)[]);
+  const [checked, setChecked] = createSignal(additional.defaultStatus || TodoStatus.TODO);
   createEffect(
     on(checked, (value) => {
-      if (additional.onCheckedChange) {
-        additional.onCheckedChange(value);
+      if (additional.onStatusChange) {
+        additional.onStatusChange(value);
       }
     })
   );
@@ -43,12 +44,11 @@ export default function Checkbox(props: CheckboxProps) {
     >
       <button
         {...rest}
-        role="checkbox"
         type="button"
         onClick={() => {
-          setChecked(!checked());
+          setChecked((prev) => (prev === TodoStatus.TODO ? TodoStatus.DONE : TodoStatus.TODO));
         }}
-        aria-checked={checked()}
+        data-status={checked()}
         class={square({
           border: "none",
           borderRadius: "lg",
@@ -61,7 +61,7 @@ export default function Checkbox(props: CheckboxProps) {
           outlineOffset: "1",
           outlineColor: "warmGray.700",
           size: "6",
-          _ariaChecked: {
+          _statusDone: {
             bgColor: "warmGray.800",
             color: "warmGray.300"
           }
@@ -73,7 +73,7 @@ export default function Checkbox(props: CheckboxProps) {
             color: "warmGray.300",
             position: "absolute",
             userSelect: "none",
-            ["button[aria-checked=true] > &"]: {
+            ["button[data-status=done] > &"]: {
               visibility: "visible"
             }
           })}

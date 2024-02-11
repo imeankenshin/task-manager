@@ -9,11 +9,8 @@ import { vstack } from "styled-system/patterns";
 import { NewTaskCommand } from "~/components/new-task-command";
 import { Dialog } from "@ark-ui/solid";
 import { NoTasks } from "~/components/no-tasks";
+import { Todo, TodoStatus } from "~/types/todo";
 
-type Todo = {
-  text: string;
-  completed: boolean;
-};
 export default function App() {
   const [todos, setTodos] = createSignal(new Array<Todo>());
   const [commandIsOpen, setCommandIsOpen] = createSignal(false);
@@ -52,8 +49,17 @@ export default function App() {
         }}
       >
         <NewTaskCommand
-          onAdd={(text) => {
-            setTodos([...todos(), { text, completed: false }]);
+          onAdd={(todo) => {
+            setTodos([
+              ...todos(),
+              {
+                ...todo,
+                id: Math.random().toString(36).substring(7),
+                status: TodoStatus.TODO,
+                createdAt: new Date(),
+                updatedAt: new Date()
+              }
+            ]);
             setCommandIsOpen(false);
           }}
           inputRef={(el) => (inputRef = el)}
@@ -72,11 +78,7 @@ export default function App() {
               gap: "6",
               outlineWidth: "4",
               outlineOffset: "1",
-              outlineColor: "warmGray.700",
-              _ariaChecked: {
-                bgColor: "warmGray.800",
-                color: "warmGray.300"
-              }
+              outlineColor: "warmGray.700"
             })}
           >
             <For each={todos()}>
@@ -88,9 +90,9 @@ export default function App() {
                   })}
                 >
                   <TaskItem
-                    onChange={(checked) => {
+                    onStatusChange={(checked) => {
                       const newTodos = [...todos()];
-                      newTodos[index()].completed = checked;
+                      newTodos[index()].status = checked ? "done" : "todo";
                       setTodos(newTodos);
                     }}
                     onDelete={(e) => {
@@ -108,10 +110,7 @@ export default function App() {
                         inputRef?.focus();
                       }
                     }}
-                    id={index().toString()}
-                    completed={todo.completed}
-                    title={todo.text}
-                    description="test"
+                    {...todo}
                   />
                 </FocusableItem>
               )}

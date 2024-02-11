@@ -1,4 +1,14 @@
-import { date, enum_, maxLength, minLength, nullable, object, type Output, string } from "valibot";
+import {
+  date,
+  enum_,
+  Input,
+  maxLength,
+  minLength,
+  nullable,
+  object,
+  type Output,
+  string
+} from "valibot";
 
 export const TodoStatus = {
   DOING: "doing",
@@ -6,15 +16,15 @@ export const TodoStatus = {
   REVIEWING: "reviewing",
   TODO: "todo"
 } as const;
-export const todoStatusSchema = enum_(TodoStatus);
-export const todoInputSchema = object({
+export const TodoStatusSchema = enum_(TodoStatus);
+export const TodoInputSchema = object({
   deadline: nullable(date()),
   description: nullable(string([maxLength(4095)])),
-  status: todoStatusSchema,
+  status: TodoStatusSchema,
   title: string([minLength(1), maxLength(255)])
 });
-export type TodoStatusValue = Output<typeof todoStatusSchema>;
-export type TodoInput = Output<typeof todoInputSchema>;
+export type TodoStatusValue = Output<typeof TodoStatusSchema>;
+export type TodoInput = Input<typeof TodoInputSchema>;
 export type Todo = TodoInput & {
   createdAt: Date;
   id: string;

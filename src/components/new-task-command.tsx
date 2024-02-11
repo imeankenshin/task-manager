@@ -53,10 +53,10 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
             w="full"
             justifyContent="center"
             onSubmit={(e) => {
-              const input = e.currentTarget.querySelector("input");
-              const formData = new FormData(e.currentTarget);
-              const title = (formData.get("text") || "").toString().trim();
-              const description = (formData.get("description") || "").toString().trim();
+              const input = e.currentTarget.querySelector("input"),
+                formData = new FormData(e.currentTarget),
+                title = (formData.get("text") || "").toString().trim(),
+                description = (formData.get("description") || "").toString().trim();
               e.preventDefault();
               if (title && input) {
                 props.onAdd({
@@ -80,14 +80,15 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
               borderStyle: "solid",
               borderWidth: "1px",
               boxShadow: "2xl",
-              gap: "2",
-              pb: "6"
+              gap: "4",
+              padding: "6"
             })}
           >
             <input
               name="text"
               id="text"
               ref={props.inputRef}
+              required={true}
               autocomplete="off"
               placeholder="What do you need to do?"
               class={css({
@@ -100,9 +101,6 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
                 bgColor: "transparent",
                 fontSize: "xl",
                 fontWeight: "medium",
-                h: "16",
-                px: "6",
-                roundedTop: "xl",
                 w: "full"
               })}
             />
@@ -110,7 +108,7 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
               name="description"
               id="description"
               placeholder="Add a description"
-              rows={4}
+              rows={3}
               class={css({
                 _focus: {
                   outline: "none"
@@ -120,11 +118,8 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
                 },
                 resize: "none",
                 bgColor: "transparent",
-                flex: 8,
                 fontSize: "medium",
                 fontWeight: "medium",
-                px: "6",
-                roundedBottom: "xl",
                 w: "full"
               })}
             />

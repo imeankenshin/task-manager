@@ -2,8 +2,9 @@ import { Portal } from "solid-js/web";
 import { Dialog } from "@ark-ui/solid";
 import { styled } from "styled-system/jsx";
 import { css } from "styled-system/css";
-import { TodoInput } from "~/types/todo";
+import { TodoInput, TodoInputSchema } from "~/types/todo";
 import { vstack } from "styled-system/patterns";
+import { safeParse } from "valibot";
 
 type NewTaskCommandProps = {
   onAdd: (todo: TodoInput) => void;
@@ -53,19 +54,19 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
             w="full"
             justifyContent="center"
             onSubmit={(e) => {
-              const input = e.currentTarget.querySelector("input"),
-                formData = new FormData(e.currentTarget),
-                title = (formData.get("text") || "").toString().trim(),
-                description = (formData.get("description") || "").toString().trim();
+              const formData = new FormData(e.currentTarget);
+              const title = (formData.get("text") || "").toString().trim();
+              const description = (formData.get("description") || "").toString().trim();
+              const data = safeParse(TodoInputSchema, {
+                title,
+                description
+              });
               e.preventDefault();
-              if (title && input) {
-                props.onAdd({
-                  description: description || null,
-                  deadline: new Date(),
-                  title
-                });
+              if (data.success) {
+                props.onAdd(data.output);
+                (document.getElementById("text") as HTMLInputElement).value = "";
+                (document.getElementById("description") as HTMLTextAreaElement).value = "";
               }
-              e.currentTarget.reset();
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && e.metaKey) {

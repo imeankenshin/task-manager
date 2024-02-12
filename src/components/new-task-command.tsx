@@ -1,6 +1,6 @@
 import { Portal } from "solid-js/web";
 import { Dialog } from "@ark-ui/solid";
-import { styled } from "styled-system/jsx";
+import { HStack, styled } from "styled-system/jsx";
 import { css } from "styled-system/css";
 import { TodoInput, TodoInputSchema } from "~/types/todo";
 import { vstack } from "styled-system/patterns";
@@ -69,7 +69,7 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && e.metaKey) {
-                e.currentTarget.dispatchEvent(new Event("submit"));
+                document.getElementById("add-task")?.click();
               }
             }}
             class={vstack({
@@ -123,6 +123,27 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
                 w: "full"
               })}
             />
+            <HStack w="full">
+              <HStack w="full" gap="2" />
+              <button
+                id="add-task"
+                type="submit"
+                class={css({
+                  _hover: {
+                    bgColor: "warmGray.400"
+                  },
+                  bgColor: "warmGray.300",
+                  borderRadius: "lg",
+                  color: "warmGray.700",
+                  fontWeight: "medium",
+                  height: "10",
+                  paddingX: "3",
+                  whiteSpace: "nowrap"
+                })}
+              >
+                Add Task
+              </button>
+            </HStack>
           </styled.form>
         </Dialog.Content>
       </Dialog.Positioner>

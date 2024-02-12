@@ -64,8 +64,7 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
               e.preventDefault();
               if (data.success) {
                 props.onAdd(data.output);
-                (document.getElementById("text") as HTMLInputElement).value = "";
-                (document.getElementById("description") as HTMLTextAreaElement).value = "";
+                e.currentTarget.reset();
               }
             }}
             onKeyDown={(e) => {

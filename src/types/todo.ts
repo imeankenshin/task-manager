@@ -4,8 +4,8 @@ import {
   Input,
   maxLength,
   minLength,
-  nullable,
   object,
+  optional,
   type Output,
   string
 } from "valibot";
@@ -18,10 +18,10 @@ export const TodoStatus = {
 } as const;
 export const TodoStatusSchema = enum_(TodoStatus);
 export const TodoInputSchema = object({
-  deadline: nullable(date()),
-  description: nullable(string([maxLength(4095)])),
-  status: TodoStatusSchema,
-  title: string([minLength(1), maxLength(255)])
+  deadline: optional(date()),
+  description: optional(string([maxLength(2 ** 12 - 1)])),
+  status: optional(TodoStatusSchema, TodoStatus.TODO),
+  title: string([minLength(1), maxLength(2 ** 8 - 1)])
 });
 export type TodoStatusValue = Output<typeof TodoStatusSchema>;
 export type TodoInput = Input<typeof TodoInputSchema>;

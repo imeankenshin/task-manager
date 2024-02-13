@@ -1,9 +1,10 @@
 import { Portal } from "solid-js/web";
 import { Dialog } from "@ark-ui/solid";
-import { styled } from "styled-system/jsx";
+import { HStack, styled } from "styled-system/jsx";
 import { css } from "styled-system/css";
-import { TodoInput } from "~/types/todo";
+import { TodoInput, TodoInputSchema } from "~/types/todo";
 import { vstack } from "styled-system/patterns";
+import { safeParse } from "valibot";
 
 type NewTaskCommandProps = {
   onAdd: (todo: TodoInput) => void;
@@ -53,23 +54,22 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
             w="full"
             justifyContent="center"
             onSubmit={(e) => {
-              const input = e.currentTarget.querySelector("input"),
-                formData = new FormData(e.currentTarget),
-                title = (formData.get("text") || "").toString().trim(),
-                description = (formData.get("description") || "").toString().trim();
+              const formData = new FormData(e.currentTarget);
+              const title = (formData.get("text") || "").toString().trim();
+              const description = (formData.get("description") || "").toString().trim();
+              const data = safeParse(TodoInputSchema, {
+                title,
+                description
+              });
               e.preventDefault();
-              if (title && input) {
-                props.onAdd({
-                  description: description || null,
-                  deadline: new Date(),
-                  title
-                });
+              if (data.success) {
+                props.onAdd(data.output);
+                e.currentTarget.reset();
               }
-              e.currentTarget.reset();
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter" && e.metaKey) {
-                e.currentTarget.dispatchEvent(new Event("submit"));
+                document.getElementById("add-task")?.click();
               }
             }}
             class={vstack({
@@ -123,6 +123,27 @@ export function NewTaskCommand(props: NewTaskCommandProps) {
                 w: "full"
               })}
             />
+            <HStack w="full">
+              <HStack w="full" gap="2" />
+              <button
+                id="add-task"
+                type="submit"
+                class={css({
+                  _hover: {
+                    bgColor: "warmGray.400"
+                  },
+                  bgColor: "warmGray.300",
+                  borderRadius: "lg",
+                  color: "warmGray.700",
+                  fontWeight: "medium",
+                  height: "10",
+                  paddingX: "3",
+                  whiteSpace: "nowrap"
+                })}
+              >
+                Add Task
+              </button>
+            </HStack>
           </styled.form>
         </Dialog.Content>
       </Dialog.Positioner>

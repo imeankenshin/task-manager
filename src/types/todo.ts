@@ -1,18 +1,31 @@
+import {
+  date,
+  enum_,
+  Input,
+  maxLength,
+  minLength,
+  object,
+  optional,
+  type Output,
+  string
+} from "valibot";
+
 export const TodoStatus = {
-  TODO: "todo",
   DOING: "doing",
+  DONE: "done",
   REVIEWING: "reviewing",
-  DONE: "done"
+  TODO: "todo"
 } as const;
-export type TodoStatusValue = (typeof TodoStatus)[keyof typeof TodoStatus];
-
-export type Todo = {
+export const TodoStatusSchema = enum_(TodoStatus);
+export const TodoInputSchema = object({
+  deadline: optional(date()),
+  description: optional(string([maxLength(2 ** 12 - 1)])),
+  status: optional(TodoStatusSchema, TodoStatus.TODO),
+  title: string([minLength(1), maxLength(2 ** 8 - 1)])
+});
+export type TodoStatusValue = Output<typeof TodoStatusSchema>;
+export type TodoInput = Input<typeof TodoInputSchema>;
+export type Todo = TodoInput & {
   createdAt: Date;
-  deadline: Date;
-  description: string | null;
   id: string;
-  status: TodoStatusValue;
-  title: string;
 };
-
-export type TodoInput = Pick<Todo, "description" | "title" | "deadline">;

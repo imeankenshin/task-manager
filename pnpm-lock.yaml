@@ -17,6 +17,9 @@ dependencies:
   solid-js:
     specifier: ^1.8.11
     version: 1.8.11
+  valibot:
+    specifier: ^0.28.1
+    version: 0.28.1
   vinxi:
     specifier: ^0.1.2
     version: 0.1.2(@types/node@18.19.6)(preact@10.19.3)
@@ -8545,6 +8548,10 @@ packages:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
     hasBin: true
     dev: true
+
+  /valibot@0.28.1:
+    resolution: {integrity: sha512-zQnjwNJuXk6362Leu0+4eFa/SMwRom3/hEvH6s1EGf3oXIPbo2WFKDra9ymnbVh3clLRvd8hw4sKF5ruI2Lyvw==}
+    dev: false
 
   /validate-html-nesting@1.2.2:
     resolution: {integrity: sha512-hGdgQozCsQJMyfK5urgFcWEqsSSrK63Awe0t/IMR0bZ0QMtnuaiHzThW81guu3qx9abLi99NEuiaN6P9gVYsNg==}
